@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Contrate-Me</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+        <link href="css/font-awesome.css" rel="stylesheet" type="text/css"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div class="offset-3">
+            <header style="margin-top: 1%;" class="form-row">
+
+                <div class="form-group">
+                    <img id="avatar" width="121px" height="160px" src="img/822711_user_512x512.png" alt=""/>            
+                </div>
+                <div style="margin-left: 10px;" class="form-group col-md-7">
+                    <h4 id="nome">Felipe Dos Santos Neves</h4>
+                    <div class="row">
+                        <div class="col">
+                            <h3 class="h5"><span class="badge badge-primary badge-pill" style="margin-top: -3px"> <i class="icon-help"> </i>Objetivo</span> </h3>
+                        </div>
+                    </div>
+                    <p style="text-align: justify;">Almejo conseguir uma vaga de trabalho para que possa colocar minhas habilidades em  prática  e  colaborar  com  equipes de trabalho,	visionando o desenvolvimento pessoal, profissional e o crescimento da empresa como prioridade.</p>
+
+                </div>
+
+            </header>
+        </div>
+        <hr class="col-md-6 offset-3">
+
+        <section id="dadosPessoais">
+            <form  class="col-md-6 offset-3" id="formGeracao" controller="gerador" method="post" accept-charset="utf-8">			
+  
+
+                    <div class="row mb-4">
+                        <div class="col">
+                            <h3 class="h5">FORMULÁRIO </h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                            <div class="form-group">
+                                <label for="username">Nome:</label>
+                                <input class="form-control form-control-lg" type="text"  id="nome">
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                            <div class="form-group">
+                                <label for="first-name">Nome da Empresa:
+                                </label>
+                                <input class="form-control form-control-lg" type="text" id="nacionalidade" >
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                            <div class="form-group">
+                                <label for="last-name">Tipo de Trabalho:</label>
+                                <select class="custom-select" id="sexo">
+                                    <option value="H">Home Office</option>
+                                    <option value="F">Presencial</option>
+                                    <option value="M">Misto</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                            <div class="form-group">
+                                <label for="last-name">Salário</label>
+                                <input min="3000" max="10000" class="form-control form-control-lg" type="number" value="5000" >
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="username">Data de Início</label>
+                                <input class="form-control form-control-lg" type="Date" id="endereco" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Informe seu endereço completo, com o número e, opcionalmente, o complemento">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="last-name">Tipo de vínculo</label><br>
+                                <input  class=" " type="radio" >CLT<br>
+                                <input  class="" type="radio" >PJ<br>
+                                <input  class="" type="radio" >FREELANCER
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="last-name">Urgência</label><br>
+                                <input  class=" " type="checkbox" >Preciso dos seus serviços com urgência!
+                                <br>
+
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <button class="col-md-12 btn btn-primary" type="button">Enviar</button>
+
+                        </div>
+
+                    </div>
+
+
+            </form>
+        </section>
+
+        <footer style="margin-top:1%;">
+            <center>
+                <nav class="navbar-light bg-light">
+                    <span class="navbar-brand mb-0 h1"><a href="curriculo-Felipe-Neves.html">Currículo</a></span>
+                    <span class="navbar-brand mb-0 h1"><a href="contrate-me-Felipe-Neves.html">Contrate-me</a></span>
+                </nav>
+            </center>
+        </footer>
+
+        <script src="https://kit.fontawesome.com/2bd3bb0804.js" crossorigin="anonymous"></script>
+    </body>
+
+</html>
