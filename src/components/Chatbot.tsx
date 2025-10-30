@@ -90,7 +90,7 @@ export function Chatbot({ isOpen, onClose, lang }: ChatbotProps) {
       textareaRef.current.style.height = 'auto';
     }
     try {
-      const fullHistory = mapMessagesToApiHistory(updatedMessages);
+      
       const langInstruction = lang === 'pt'
         ? "INSTRUÇÃO IMPORTANTE: Responda a esta nova mensagem (e todas as futuras) estritamente em Português (Brasil)."
         : "IMPORTANT INSTRUCTION: You must reply to this new message (and all future messages) strictly in English.";
