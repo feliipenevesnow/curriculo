@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Raleway:wght@400;500;700;900&display=swap');
+:root {
+  --cor-primaria: #0d47a1;
+  --cor-secundaria: #1a73e8;
+  --cor-fundo-cabecalho: #0a3a82;
+  --cor-fundo-pagina: #f4f7f9;
+  --cor-fundo-secao: #ffffff;
+  --cor-texto-principal: #333;
+  --cor-texto-claro: #f0f0f0;
+  --cor-texto-cabecalho: #ffffff;
+  --cor-borda: #eaeaea;
+  --fonte-titulos: 'Raleway', sans-serif;
+  --fonte-principal: 'Lato', sans-serif;
+  color-scheme: light;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: var(--fonte-principal);
+  background-color: var(--cor-fundo-pagina);
+  color: var(--cor-texto-principal);
+  line-height: 1.6;
+  font-size: 16px;
+}
