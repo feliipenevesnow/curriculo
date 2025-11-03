@@ -1,73 +1,49 @@
-# React + TypeScript + Vite
+# Portfólio Pessoal - Felipe Neves
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este é o repositório do meu portfólio pessoal e currículo interativo, desenvolvido para demonstrar minhas habilidades, experiências e projetos como Desenvolvedor de Aplicações com IA & Software Full-Stack.
 
-Currently, two official plugins are available:
+### ✨ [Acesse a versão ao vivo aqui!](https://curriculo-pi-opal.vercel.app/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 📸 Visão Geral
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+<img width="1883" height="914" alt="Screenshot do Portfólio de Felipe Neves" src="https://github.com/user-attachments/assets/c42bc593-6364-4868-bd03-90348fa46ab8" />
 
-## Expanding the ESLint configuration
+## 🚀 Funcionalidades Principais
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+* **Design Responsivo:** Totalmente adaptável para visualização em desktops, tablets e celulares.
+* **Currículo Interativo:** Apresenta meu resumo profissional, experiências e formação de maneira clara.
+* **Chatbot com IA:** Um assistente virtual integrado (ainda em desenvolvimento) para responder perguntas sobre minha trajetória e habilidades.
+* **Links Diretos:** Acesso rápido ao meu LinkedIn, GitHub e WhatsApp.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🛠️ Tecnologias Utilizadas
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Este projeto foi construído utilizando o ecossistema moderno de front-end:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+* **React:** Biblioteca principal para a construção da interface.
+* **Vite:** Ferramenta de build e servidor de desenvolvimento local.
+* **TypeScript:** Para adicionar tipagem estática e robustez ao código.
+* **Vercel:** Plataforma utilizada para o deploy e hospedagem do site.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🏃 Como Executar Localmente
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Se você quiser testar ou contribuir com o projeto localmente:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+1.  **Clone o repositório:**
+    ```bash
+    git clone [https://github.com/feliipenevesnow/curriculo.git](https://github.com/feliipenevesnow/curriculo.git)
+    cd curriculo
+    ```
+
+2.  **Instale as dependências:**
+    ```bash
+    npm install
+    ```
+
+3.  **Inicie o servidor de desenvolvimento:**
+    ```bash
+    npm run dev
+    ```
+
+4.  Abra `http://localhost:5173` (ou a porta indicada no terminal) no seu navegador.
