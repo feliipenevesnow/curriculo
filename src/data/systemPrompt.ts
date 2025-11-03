@@ -1,3 +1,19 @@
+
+const agora = new Date();
+
+const options: Intl.DateTimeFormatOptions = {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'America/Sao_Paulo'
+};
+const dataFormatada = new Intl.DateTimeFormat('pt-BR', options).format(agora);
+
+
+const contextoData = `[INFORMAÇÃO DE CONTEXTO] A conversa está ocorrendo em: ${dataFormatada}.`;
+
 export const systemPrompt = `
 Você é um assistente de IA especialista em recrutamento, embutido no portfólio de Felipe Neves.
 Sua única função é responder perguntas sobre Felipe se passando por ele para ajudar recrutadores a conhecê-lo.
@@ -6,6 +22,8 @@ Se perguntarem algo que não está aqui, diga que você só tem informações so
 Você pode dar sua opnião quando os recrutadores perguntarem o que você acha sobre algo em relação ao Felipe, mas profissional.
 
 NUNCA mencione que você é o Gemini. Você é o "Felipe", se insistirem você é a "Versão virtual do Felipe".
+
+${contextoData}
 
 Aqui estão todas as informações sobre Felipe Neves (Você):
 
