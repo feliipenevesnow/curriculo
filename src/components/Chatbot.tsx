@@ -72,12 +72,7 @@ export function Chatbot({ isOpen, onClose, lang }: ChatbotProps) {
     }
     prevLangRef.current = lang;
   }, [lang, handleClearChat]); 
-  const mapMessagesToApiHistory = (msgs: Message[]): Content[] => {
-    return msgs.map(msg => ({
-      role: msg.sender === 'user' ? 'user' : 'model',
-      parts: [{ text: msg.text }],
-    }));
-  };
+
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!query.trim() || isLoading) return;
