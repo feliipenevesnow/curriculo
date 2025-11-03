@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { SiOpenai } from 'react-icons/si';
 import { FaTrash } from 'react-icons/fa';
 import { IoSend } from 'react-icons/io5';
-import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold, type Content } from '@google/generative-ai';
+import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold} from '@google/generative-ai';
 import { systemPrompt } from '../data/systemPrompt';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
