@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { SiOpenai } from 'react-icons/si';
 import { FaTrash } from 'react-icons/fa';
 import { IoSend } from 'react-icons/io5';
-import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold} from '@google/generative-ai';
+import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from '@google/generative-ai';
 import { systemPrompt } from '../data/systemPrompt';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -18,7 +18,7 @@ type ChatbotProps = {
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 console.log("API_KEY carregada:", API_KEY ? "✅ OK" : "❌ FALTA DEFINIR");
 const genAI = new GoogleGenerativeAI(API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite" });
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 const generationConfig = {
   temperature: 0.9,
   topK: 1,
@@ -63,21 +63,21 @@ export function Chatbot({ isOpen, onClose, lang }: ChatbotProps) {
     requestAnimationFrame(() => {
       textareaRef.current?.focus();
     });
-  }, []); 
-  const prevLangRef = useRef(lang); 
+  }, []);
+  const prevLangRef = useRef(lang);
   useEffect(() => {
     if (prevLangRef.current && prevLangRef.current !== lang) {
       console.log(`Idioma trocado de ${prevLangRef.current} para ${lang}. Limpando histórico.`);
       handleClearChat();
     }
     prevLangRef.current = lang;
-  }, [lang, handleClearChat]); 
+  }, [lang, handleClearChat]);
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!query.trim() || isLoading) return;
     const userMessage: Message = { sender: 'user', text: query };
-    const updatedMessages = [...messages, userMessage]; 
+    const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
     setQuery('');
     setIsLoading(true);
@@ -85,7 +85,7 @@ export function Chatbot({ isOpen, onClose, lang }: ChatbotProps) {
       textareaRef.current.style.height = 'auto';
     }
     try {
-      
+
       const langInstruction = lang === 'pt'
         ? "INSTRUÇÃO IMPORTANTE: Responda a esta nova mensagem (e todas as futuras) estritamente em Português (Brasil)."
         : "IMPORTANT INSTRUCTION: You must reply to this new message (and all future messages) strictly in English.";
@@ -96,8 +96,8 @@ export function Chatbot({ isOpen, onClose, lang }: ChatbotProps) {
       const fullPrompt = `${systemPrompt}\n
 ${langInstruction}\n\n
 ${historyLabel}\n${updatedMessages
-  .map(m => (m.sender === 'user' ? `${userLabel}: ${m.text}` : `${assistantLabel}: ${m.text}`))
-  .join('\n')}
+          .map(m => (m.sender === 'user' ? `${userLabel}: ${m.text}` : `${assistantLabel}: ${m.text}`))
+          .join('\n')}
 ${newUserLabel}
 ${query}`;
       const result = await model.generateContent({
@@ -182,6 +182,7 @@ ${query}`;
       <form className="chatbot-input-form" onSubmit={handleSend}>
         <textarea
           ref={textareaRef}
+          className="chatbot-textarea"
           value={query}
           onChange={handleChange}
           onKeyDown={handleKeyDown}

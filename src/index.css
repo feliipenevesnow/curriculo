@@ -1,27 +1,56 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Raleway:wght@400;500;700;900&display=swap');
+
 :root {
-  --cor-primaria: #0d47a1;
-  --cor-secundaria: #1a73e8;
-  --cor-fundo-cabecalho: #0a3a82;
-  --cor-fundo-pagina: #f4f7f9;
-  --cor-fundo-secao: #ffffff;
-  --cor-texto-principal: #333;
-  --cor-texto-claro: #f0f0f0;
-  --cor-texto-cabecalho: #ffffff;
-  --cor-borda: #eaeaea;
-  --fonte-titulos: 'Raleway', sans-serif;
-  --fonte-principal: 'Lato', sans-serif;
-  color-scheme: light;
+  --bg-color: #09090b;
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --accent-primary: #06b6d4;
+  /* Cyan */
+  --accent-secondary: #8b5cf6;
+  /* Violet */
+  --glass-bg: rgba(25, 25, 35, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-highlight: rgba(255, 255, 255, 0.15);
+
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
-* {
+
+body {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 20%);
+  background-attachment: fixed;
+  font-family: 'Inter', sans-serif;
 }
-body {
-  font-family: var(--fonte-principal);
-  background-color: var(--cor-fundo-pagina);
-  color: var(--cor-texto-principal);
-  line-height: 1.6;
-  font-size: 16px;
+
+/* Scrollbar Customization */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

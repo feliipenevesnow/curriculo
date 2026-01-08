@@ -5,6 +5,7 @@
   z-index: 9998;
   pointer-events: none;
 }
+
 .hand-icon-wrapper {
   display: inline-block;
   color: white;
@@ -12,20 +13,25 @@
   filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
   transition: transform 0.2s ease;
 }
+
 .hand-guide.clicking .hand-icon-wrapper {
   animation: hand-click 0.5s ease;
 }
+
 @keyframes hand-click {
+
   0%,
   100% {
     transform-origin: bottom left;
     transform: scale(1) rotate(0deg);
   }
+
   50% {
     transform-origin: bottom left;
     transform: scale(0.9) rotate(10deg);
   }
 }
+
 .hand-trail-svg {
   position: fixed;
   top: 0;
@@ -35,19 +41,24 @@
   z-index: 9997;
   pointer-events: none;
 }
+
 .hand-trail-svg path {
   fill: none;
-  stroke: gray;
-  stroke-width: 3px;
+  stroke: #06b6d4;
+  /* Cyan to match theme */
+  stroke-width: 2px;
   stroke-linecap: round;
-  opacity: 0.7;
+  opacity: 0.6;
   stroke-dasharray: 4 8;
-  animation: march-ants 0.5s linear infinite;
+  animation: march-ants 1s linear infinite;
+  filter: drop-shadow(0 0 5px #06b6d4);
 }
+
 @keyframes march-ants {
   from {
     stroke-dashoffset: 0;
   }
+
   to {
     stroke-dashoffset: 12;
   }

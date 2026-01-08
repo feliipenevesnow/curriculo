@@ -1,0 +1,79 @@
+.background-shapes {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.shape-wrapper {
+    position: absolute;
+    /* Size is handled by content */
+    will-change: transform;
+}
+
+.size-medium .shape {
+    transform: scale(0.6);
+    /* Reduced from 1 to 0.6 */
+}
+
+.size-small .shape {
+    transform: scale(0.35);
+    /* Reduced from small to even smaller */
+}
+
+.shape {
+    display: block;
+    opacity: 0.3;
+    filter: blur(1px);
+}
+
+/* Circle */
+.shape-circle {
+    width: 50px;
+    height: 50px;
+    border: 3px solid var(--accent-primary);
+    border-radius: 50%;
+    box-shadow: 0 0 15px var(--accent-primary);
+}
+
+/* Square */
+.shape-square {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--accent-secondary);
+    box-shadow: 0 0 15px var(--accent-secondary);
+}
+
+/* Triangle SVG */
+.shape-triangle-svg {
+    width: 50px;
+    height: 50px;
+    overflow: visible;
+    /* Allow glow to show */
+}
+
+.shape-triangle-svg polygon {
+    fill: none;
+    stroke: var(--accent-primary);
+    stroke-width: 4;
+    filter: drop-shadow(0 0 5px var(--accent-primary));
+}
+
+/* X */
+.shape-x {
+    font-family: sans-serif;
+    font-size: 50px;
+    color: var(--accent-secondary);
+    font-weight: 100;
+    line-height: 0.8;
+}
+
+@media (max-width: 768px) {
+    .shape {
+        opacity: 0.2;
+    }
+}

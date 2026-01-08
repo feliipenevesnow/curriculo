@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { translations, type TranslationData } from './data/translations';
+import { ProjectCarousel } from './components/ProjectCarousel';
 import html2pdf from 'html2pdf.js';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -7,43 +8,80 @@ import './App.css';
 import { ScrollBot } from './components/ScrollBot';
 import { Chatbot } from './components/Chatbot';
 import { HandGuide } from './components/HandGuide';
+import { BackgroundShapes } from './components/BackgroundShapes';
 import './components/HandGuide.css';
-import { FaFilePdf, FaLanguage, FaWhatsapp, FaLinkedin, FaGithub } from "react-icons/fa";
+import {
+  FaFilePdf,
+  FaLanguage,
+  FaWhatsapp,
+  FaLinkedin,
+  FaGithub,
+  FaPhone,
+  FaEnvelope,
+  FaMapMarkerAlt
+} from "react-icons/fa";
+import profileImg from './assets/profile.jpeg';
+import tccVant from './assets/TccFaculdade.png';
+import tccExpressale from './assets/TccIntegrado.png';
+
 function App() {
-  const handleLinkClick = (url: any) => {
+  const handleLinkClick = (url: string) => {
     window.open(url, '_blank');
   };
+
   const [lang, setLang] = useState<'pt' | 'en'>('pt');
   const [isChatOpen, setIsChatOpen] = useState(false);
   const T: TranslationData = translations[lang];
   const contentRef = useRef<HTMLDivElement>(null);
+
   const toggleLang = () => {
     setLang((currentLang) => (currentLang === 'pt' ? 'en' : 'pt'));
   };
+
   const toggleChat = () => {
     setIsChatOpen(!isChatOpen);
   };
-  const downloadPDF = () => {
+
+  const downloadPDF = async () => {
     const element = contentRef.current;
     if (!element) return;
+
+    // Add PDF specific class
+    element.classList.add('pdf-mode');
+
     const filename = (lang === 'pt') ? 'CV_Felipe_Neves.pdf' : 'Resume_Felipe_Neves.pdf';
     const options = {
-      margin: 0,
+      margin: [10, 10, 10, 10], // Top, Left, Bottom, Right
       filename: filename,
-      image: { type: 'jpeg' as const, quality: 1.0 },
-      html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
+      image: { type: 'jpeg' as const, quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true, scrollY: 0, backgroundColor: '#ffffff', logging: false },
       jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const },
-      pagebreak: { mode: 'css' as const },
+      pagebreak: { mode: ['css', 'legacy'] },
     };
-    html2pdf().set(options).from(element).save();
+
+    try {
+      // @ts-ignore
+      await html2pdf().set(options).from(element).save();
+    } finally {
+      // Remove PDF specific class ensuring it runs even if save fails (it's async though)
+      // Since html2pdf is a promise (usually), better wait.
+      // However the lib might not return promise on save() depending on version/usage.
+      // A small timeout ensures the rendering started.
+      setTimeout(() => {
+        element.classList.remove('pdf-mode');
+      }, 1000);
+    }
   };
+
   useEffect(() => {
     AOS.init({
-      duration: 800,
+      duration: 1000,
       once: true,
-      offset: 50,
+      offset: 100,
+      easing: 'ease-out-cubic',
     });
   }, []);
+
   const handleWhatsAppClick = () => {
     const phoneNumber = '5518981712939';
     const defaultMessage = 'Olá! Vi seu portfólio e gostaria de conversar.';
@@ -51,19 +89,22 @@ function App() {
     const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
   };
+
   return (
     <>
+      <BackgroundShapes />
       <HandGuide />
-      <ScrollBot onClick={toggleChat} />
+      <ScrollBot onClick={toggleChat} lang={lang} />
       <Chatbot
         isOpen={isChatOpen}
         onClose={toggleChat}
-        lang={lang} 
+        lang={lang}
       />
+
       <div className="botoes-acao-flutuantes">
         <button id="download-pdf" onClick={downloadPDF} aria-label={T.btnDownload} title={T.btnDownload}>
           <FaFilePdf className="icone" />
-          <span>{T.btnDownload}</span>
+          <span>PDF</span>
         </button>
         <button id="toggle-lang" onClick={toggleLang} aria-label={T.btnLang} title={T.btnLang}>
           <FaLanguage className="icone" />
@@ -72,52 +113,55 @@ function App() {
         <button
           id="whatsapp"
           onClick={handleWhatsAppClick}
-          aria-label="Fale comigo no WhatsApp"
-          title="Fale comigo no WhatsApp"
+          aria-label="WhatsApp"
+          title="WhatsApp"
         >
           <FaWhatsapp className="icone" />
-          <span>Whatsapp</span>
+          <span>Zap</span>
         </button>
         <button
           id="linkedin"
           onClick={() => handleLinkClick('https://www.linkedin.com/in/feliipenevesnow/')}
-          aria-label="Meu LinkedIn"
-          title="Meu LinkedIn"
+          aria-label="LinkedIn"
+          title="LinkedIn"
         >
           <FaLinkedin className="icone" />
-          <span>LinkedIn</span>
+          <span>In</span>
         </button>
         <button
           id="github"
           onClick={() => handleLinkClick('https://github.com/feliipenevesnow')}
-          aria-label="Meu GitHub"
-          title="Meu GitHub"
+          aria-label="GitHub"
+          title="GitHub"
         >
           <FaGithub className="icone" />
-          <span>GitHub</span>
+          <span>Git</span>
         </button>
       </div>
+
       <main id="curriculo" ref={contentRef} lang={lang}>
-        <header className="cabecalho-curriculo" data-aos="fade-in">
+        <header className="cabecalho-curriculo" data-aos="zoom-in" data-aos-duration="1200">
+          <img src={profileImg} alt="Felipe Neves" className="profile-photo" />
           <h1>Felipe Neves</h1>
           <h2>{T.header.jobTitle}</h2>
+
           <ul className="lista-contato">
-            <li><i className="fa-solid fa-phone"></i> +55 (18) 98171-2939</li>
-            <li><i className="fa-solid fa-envelope"></i> feliipenevesnow@gmail.com</li>
-            <li><i className="fa-solid fa-location-dot"></i> {T.header.location}</li>
-            <li><i className="fa-brands fa-linkedin"></i> linkedin.com/in/feliipenevesnow/</li>
-            <li><i className="fa-brands fa-github"></i> github.com/feliipenevesnow</li>
+            <li><FaPhone /> +55 (18) 98171-2939</li>
+            <li><FaEnvelope /> feliipenevesnow@gmail.com</li>
+            <li><FaMapMarkerAlt /> {T.header.location}</li>
           </ul>
         </header>
+
         <div className="container-conteudo">
-          <section className="secao-principal" id="resumo" data-aos="fade-up">
-            <h3>{T.summary.title}</h3>
+          <section className="glass-card" id="resumo" data-aos="fade-up">
+            <h3 className="section-title">{T.summary.title}</h3>
             <p>{T.summary.body}</p>
           </section>
-          <section className="secao-principal" id="experiencia" data-aos="fade-up">
-            <h3>{T.experience.title}</h3>
+
+          <section className="glass-card" id="experiencia" data-aos="fade-up" data-aos-delay="100">
+            <h3 className="section-title">{T.experience.title}</h3>
             {T.experience.items.map((item, index) => (
-              <article className="item-experiencia" data-aos="fade-up" key={index}>
+              <article className="item-experiencia" key={index}>
                 <div className="exp-header">
                   <h4>{item.title}</h4>
                   <span><strong>{item.company}</strong> | {item.date}</span>
@@ -130,8 +174,9 @@ function App() {
               </article>
             ))}
           </section>
-          <section className="secao-principal" id="tecnologias" data-aos="fade-up">
-            <h3>{T.skills.title}</h3>
+
+          <section className="glass-card" id="tecnologias" data-aos="fade-up" data-aos-delay="200">
+            <h3 className="section-title">{T.skills.title}</h3>
             <div className="container-skills">
               {T.skills.categories.map((cat, index) => (
                 <div className="skill-categoria" key={index}>
@@ -141,35 +186,72 @@ function App() {
               ))}
             </div>
           </section>
-          <section className="secao-principal" id="formacao-cursos" data-aos="fade-up">
+
+
+          <section className="glass-card" id="formacao" data-aos="fade-up" data-aos-delay="300">
+
             <div className="coluna-formacao">
-              <h3>{T.education.title}</h3>
+              <h3 className="section-title">{T.education.title}</h3>
               {T.education.items.map((item, index) => (
-                <div className="item-formacao" data-aos="fade-up" key={index}>
+                <div className="item-formacao" key={index} style={{ position: 'relative', marginBottom: '40px' }}>
                   <strong>{item.degree}</strong>
                   <span>{item.institution}</span>
                   <span>{item.date}</span>
+
+                  {/* TCC Info */}
+                  {item.tccTitle && (
+                    <div className="tcc-info" style={{
+                      marginTop: '25px',
+                      padding: '25px',
+                      background: 'rgba(255, 255, 255, 0.03)',
+                      borderRadius: '16px',
+                      borderLeft: '4px solid var(--accent-primary)',
+                      maxWidth: '85%', /* Giving room for the big image */
+                      position: 'relative'
+                    }}>
+                      <h5 style={{ margin: '0 0 15px 0', color: '#fff', fontSize: '1.2rem', paddingRight: '100px' }}>{item.tccTitle}</h5>
+                      <p style={{ margin: 0, fontSize: '1rem', lineHeight: '1.6', color: 'var(--text-secondary)' }}>{item.tccDescription}</p>
+                    </div>
+                  )}
+
+                  {/* Floating Image */}
+                  {item.tccImage === 'vant' && (
+                    <img
+                      src={tccVant}
+                      alt="VANT TCC"
+                      className="tcc-floating-img"
+                    />
+                  )}
+                  {item.tccImage === 'expressale' && (
+                    <img
+                      src={tccExpressale}
+                      alt="ExpresSale TCC"
+                      className="tcc-floating-img"
+                    />
+                  )}
                 </div>
               ))}
             </div>
+          </section>
+
+          <section className="glass-card" id="cursos" data-aos="fade-up" data-aos-delay="350">
             <div className="coluna-cursos">
-              <h3>{T.courses.title}</h3>
-              <ul data-aos="fade-up">
+              <h3 className="section-title">{T.courses.title}</h3>
+              <ul>
                 {T.courses.items.map((item, index) => (
                   <li key={index} dangerouslySetInnerHTML={{ __html: item }} />
                 ))}
               </ul>
             </div>
           </section>
-          <section className="secao-principal" id="projetos-idiomas" data-aos="fade-up">
+
+          <section className="glass-card" id="projetos-idiomas" data-aos="fade-up" data-aos-delay="400">
             <div className="coluna-projetos">
-              <h3>{T.projects.title}</h3>
-              {T.projects.items.map((item, index) => (
-                <p key={index} dangerouslySetInnerHTML={{ __html: item }} />
-              ))}
+              <h3 className="section-title">{T.projects.title}</h3>
+              <ProjectCarousel projects={T.projects.items} btnText={T.btnViewMore} />
             </div>
-            <div className="coluna-idiomas">
-              <h3>{T.languages.title}</h3>
+            <div className="coluna-idiomas" style={{ marginTop: '20px' }}>
+              <h3 className="section-title">{T.languages.title}</h3>
               {T.languages.items.map((item, index) => (
                 <p key={index} dangerouslySetInnerHTML={{ __html: item }} />
               ))}
@@ -177,6 +259,7 @@ function App() {
           </section>
         </div>
       </main>
+
       <footer className="site-footer">
         <p>
           {lang === 'pt' ? 'Desenvolvido com ❤️ por' : 'Developed with ❤️ by'} <strong>Felipe Neves</strong>
@@ -185,8 +268,8 @@ function App() {
           {lang === 'pt' ? 'Frontend em' : 'Frontend with'} <strong>React, TypeScript e Vite.</strong>
         </p>
         <p className="tech-stack">
-          {lang === 'pt' 
-            ? 'Potencializado com uma ' 
+          {lang === 'pt'
+            ? 'Potencializado com uma '
             : 'Powered by a '
           }
           <strong>IA Generativa (Google Gemini)</strong>
@@ -199,4 +282,5 @@ function App() {
     </>
   );
 }
+
 export default App;
