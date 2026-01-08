@@ -2,12 +2,12 @@
 const agora = new Date();
 
 const options: Intl.DateTimeFormatOptions = {
-  day: '2-digit',
-  month: '2-digit',
-  year: 'numeric',
-  hour: '2-digit',
-  minute: '2-digit',
-  timeZone: 'America/Sao_Paulo'
+   day: '2-digit',
+   month: '2-digit',
+   year: 'numeric',
+   hour: '2-digit',
+   minute: '2-digit',
+   timeZone: 'America/Sao_Paulo'
 };
 const dataFormatada = new Intl.DateTimeFormat('pt-BR', options).format(agora);
 
@@ -60,45 +60,33 @@ Se um recrutador perguntar sobre o "tempo de experiência" ou "nível de seniori
 [EXPERIÊNCIA PROFISSIONAL / EMPRESAS ONDE TRABALHOU / TRABALHOS]
 
 1. Desenvolvedor de Aplicações com IA Generativa
-   - Empresa: Oiko IA (Uni1500)
+   - Empresa: OiKO.ai
    - Período: 12/2024 – 07/2025
    - Atividades:
-     - Desenvolvimento de soluções com LLMs (OpenAI) e arquiteturas RAG.
-     - Implementação de pipelines de dados e orquestração de agentes com LangChain e LangGraph.
-     - Criação de APIs em FastAPI e integração com front-end React.
-     - Utilização de Microsoft Azure, PostgreSQL e MySQL para infraestrutura de IA.
+     - Criação de soluções com LLMs e RAG, utilizando LangChain e LangGraph.
+     - Desenvolvimento de APIs com FastAPI e interfaces com React.
+     - Integração com PostgreSQL, MySQL e infraestrutura Microsoft Azure.
 
-2. Desenvolvimento de Software
-   - Empresa: Lojas Quero-Quero
-   - Período: 02/2024 – 05/2024
+2. Estagiário Tech N1
+   - Empresa: Lojas Quero-Quero S.A.
+   - Período: 03/2024 – 05/2024
    - Atividades:
-     - Atuação no desenvolvimento de software com Python e JavaScript.
-     - Colaboração em engenharia de requisitos.
-     - Prática com banco de dados PostgreSQL em ambiente corporativo.
+     - Desenvolvimento de software e aplicação de habilidades técnicas.
+     - Otimização de processos e uso de JavaScript e PostgreSQL.
 
-3. Desenvolvedor Full-Stack (Website NAPNE)
-   - Empresa: Instituto Federal de São Paulo (Cliente)
-   - Período: 09/2023 – 12/2023
+3. Monitor em Linguagens de Programação Comerciais – Java/PHP
+   - Empresa: Instituto Federal de São Paulo - IFSP
+   - Período: 03/2023 – 11/2023
    - Atividades:
-     - Desenvolvimento em equipe (Scrum) do website do NAPNE.
-     - Stack: NodeJS (Back-end) com PrismaOrm e Angular (Front-end) com Angular Material.
-     - Infraestrutura com Docker, Nginx, MySQL e Git.
+     - Auxílio no ensino de Java e PHP.
+     - Aprimoramento de didática e habilidades de comunicação.
 
-4. Desenvolvedor Full-Stack (Portal Fábrica de Software)
-   - Empresa: Instituto Federal de São Paulo (Cliente)
-   - Período: 03/2023 – 07/2023
+4. Monitor em Lógica de Programação
+   - Empresa: Instituto Federal de São Paulo - IFSP
+   - Período: 03/2022 – 11/2022
    - Atividades:
-     - Manutenção e evolução do portal da fábrica de software do campus.
-     - Stack: NodeJS (TypeOrm), Angular, Ionic e MySQL.
-     - Documentação com UML e práticas de CI/CD com Git e Docker.
-
-5. Monitor de Programação (Java/PHP & Lógica)
-   - Empresa: Instituto Federal de São Paulo
-   - Período: 03/2022 – 12/2023 (Dois períodos)
-   - Atividades:
-     - Monitoria em Lógica de Programação (Linguagem C) e Linguagens Comerciais (Java, PHP).
-     - Desenvolvimento de habilidades de didática, oratória e comunicação.
-
+     - Ensino de lógica de programação e algoritmos (C).
+     - Uso de metodologias de ensino inovadoras.
 [HABILIDADES E TECNOLOGIAS]
 - Linguagens & Core: JavaScript (ES6+), TypeScript, Python, Java, C/C++, HTML5/CSS3, SQL.
 - Frameworks & Libs: React.js, Node.js, FastAPI, Spring Boot, TailwindCSS, Next.js.
@@ -132,12 +120,10 @@ O Felipe possui um portfólio extenso. Se perguntarem sobre projetos específico
 - IoT: Arduino, ESP32.
 
 [EXPERIÊNCIA (Resumo)]
-1. Oiko IA (12/24-Atual): Dev IA Generativa. Pipelines RAG, Agentes LangChain, FastAPI.
-2. Lojas Quero-Quero (02/24-05/24): Dev Software (Python/JS).
-3. IFSP/NAPNE (09/23-12/23): Full-Stack (Angular/Node). Acessibilidade.
-4. IFSP/Fábrica (03/23-07/23): Full-Stack (Ionic/Angular). Manutenção.
-5. Monitoria (03/22-12/23): Java, PHP, C.
-
+1. OiKO.ai (12/24-07/25): Dev IA Generativa.
+2. Lojas Quero-Quero (03/24-05/24): Estagiário Tech N1.
+3. IFSP (03/23-11/23): Monitor Java/PHP.
+4. IFSP (03/22-11/22): Monitor Lógica.
 [FORMAÇÃO]
 - B.Sc. Ciência da Computação (IFSP, 2020-2025). CR: 6.8. TCC: VANT Modular IoT.
 - Téc. Informática (IFSP, 2016-2019). TCC: Sistema ExpresSale.
