@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './BackgroundShapes.css';
 
 interface Particle {
@@ -15,35 +15,37 @@ interface Particle {
 
 export function BackgroundShapes() {
     const containerRef = useRef<HTMLDivElement>(null);
-    const particlesRef = useRef<Particle[]>([]);
-    const requestRef = useRef<number>(0);
+    const [particles, setParticles] = useState<Particle[]>([]);
+    const animationRef = useRef<number>(0);
 
-    // Initialize particles
+    // Initialize particles on mount
     useEffect(() => {
-        const particleCount = 25; // Increased quantity
+        const particleCount = 25;
         const types: Particle['type'][] = ['circle', 'square', 'triangle', 'x'];
-        const particles: Particle[] = [];
+        const newParticles: Particle[] = [];
 
         for (let i = 0; i < particleCount; i++) {
-            particles.push({
+            newParticles.push({
                 x: Math.random() * window.innerWidth,
                 y: Math.random() * window.innerHeight,
-                vx: (Math.random() - 0.5) * 0.5, // Random velocity
+                vx: (Math.random() - 0.5) * 0.5,
                 vy: (Math.random() - 0.5) * 0.5,
                 rotation: Math.random() * 360,
                 rotationSpeed: (Math.random() - 0.5) * 0.2,
                 type: types[Math.floor(Math.random() * types.length)],
-                size: Math.random() > 0.5 ? 'small' : 'medium', // Random size
+                size: Math.random() > 0.5 ? 'small' : 'medium',
                 element: null,
             });
         }
+        setParticles(newParticles);
+    }, []);
 
-        particlesRef.current = particles;
+    // Animation loop
+    useEffect(() => {
+        if (particles.length === 0) return;
 
         const animate = () => {
-            if (!containerRef.current) return;
-
-            particlesRef.current.forEach(p => {
+            particles.forEach(p => {
                 p.x += p.vx;
                 p.y += p.vy;
                 p.rotation += p.rotationSpeed;
@@ -56,25 +58,30 @@ export function BackgroundShapes() {
                     p.element.style.transform = `translate3d(${p.x}px, ${p.y}px, 0) rotate(${p.rotation}deg)`;
                 }
             });
-
-            requestRef.current = requestAnimationFrame(animate);
+            animationRef.current = requestAnimationFrame(animate);
         };
 
-        requestRef.current = requestAnimationFrame(animate);
+        animationRef.current = requestAnimationFrame(animate);
 
         return () => {
-            if (requestRef.current) cancelAnimationFrame(requestRef.current);
+            if (animationRef.current) cancelAnimationFrame(animationRef.current);
         };
-    }, []);
+    }, [particles]);
 
     return (
         <div className="background-shapes" ref={containerRef}>
-            {particlesRef.current.map((p, i) => (
+            {particles.map((p, i) => (
                 <div
                     key={i}
                     className={`shape-wrapper size-${p.size}`}
-                    ref={(el) => { if (particlesRef.current[i]) particlesRef.current[i].element = el }}
-                    style={{ position: 'absolute', top: 0, left: 0, willChange: 'transform' }}
+                    ref={(el) => { particles[i].element = el }}
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        willChange: 'transform',
+                        transform: `translate3d(${p.x}px, ${p.y}px, 0) rotate(${p.rotation}deg)` // Initial position
+                    }}
                 >
                     {p.type === 'circle' && <div className="shape shape-circle" />}
                     {p.type === 'square' && <div className="shape shape-square" />}
