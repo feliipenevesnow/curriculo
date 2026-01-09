@@ -245,12 +245,15 @@ function App() {
             </div>
           </section>
 
-          <section className="glass-card" id="projetos-idiomas" data-aos="fade-up" data-aos-delay="400">
+          <section className="glass-card" id="projetos" data-aos="fade-up" data-aos-delay="400">
             <div className="coluna-projetos">
               <h3 className="section-title">{T.projects.title}</h3>
               <ProjectCarousel projects={T.projects.items} btnText={T.btnViewMore} />
             </div>
-            <div className="coluna-idiomas" style={{ marginTop: '20px' }}>
+          </section>
+
+          <section className="glass-card" id="idiomas" data-aos="fade-up" data-aos-delay="500">
+            <div className="coluna-idiomas">
               <h3 className="section-title">{T.languages.title}</h3>
               {T.languages.items.map((item, index) => (
                 <p key={index} dangerouslySetInnerHTML={{ __html: item }} />
