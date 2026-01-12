@@ -147,30 +147,30 @@ ${query}`;
 
       // Mensagens de erro em Português
       const errorMessagesPt = [
-        "Eita, minha conexão oscilou aqui. Melhor a gente tentar conversar mais tarde, pode ser? 😅",
-        "Olha, parece que meus circuitos precisam de um café. Vamos dar um tempo e voltamos a falar depois? ☕",
-        "Tô sentindo uma instabilidade... Melhor retomar esse papo em outro momento, tá bom? 🤖",
-        "Ops, minha cabeça virtual deu um nó! Tenta me chamar daqui a pouco? 💤",
-        "Tráfego intenso de dados por aqui. Que tal tentarmos mais tarde? 🚦",
-        "Deu um erro inesperado. Pra não ficar chato, melhor encerrar por agora e tentar depois, combinado? 🤝",
-        "Meu cérebro travou rapidinho. Vamos deixar essa conversa pra mais tarde? 😵‍💫",
-        "Tô com dificuldade pra processar agora. Vou recarregar e voltamos a falar depois! 🔋",
-        "Hoje o universo digital não tá colaborando. Vamos tentar de novo numa outra hora? 🌌",
-        "Perdi o fio da meada por um instante. Melhor a gente continuar depois com mais calma! 📵"
+        "Oi! Então, agora não consigo responder. Podemos conversar mais tarde 😅?",
+        "Opa! No momento não consigo falar, mas tenta me chamar daqui a pouco 👋?",
+        "Ei! Tô meio enrolado agora. Vamos bater papo em outro horário 🕐?",
+        "Desculpa, agora não vai dar pra responder. Me chama mais tarde 📲?",
+        "Fala! Agora tá meio corrido, mas volta depois que a gente conversa 🏃‍♂️!",
+        "Oiê! Não tô conseguindo processar mensagens agora. Tenta de novo depois 🔄?",
+        "Eita, agora não consigo te dar atenção. Vamos tentar mais tarde 🤝?",
+        "Ops! Tô indisponível no momento. Me manda mensagem depois 📩?",
+        "Olá! Agora não consigo responder, mas em breve estarei de volta ⏳!",
+        "Poxa, agora não consigo falar. A gente pode retomar esse papo depois 💬?"
       ];
 
       // Error messages in English
       const errorMessagesEn = [
-        "Oops, my connection just flickered. Maybe we can try chatting later? 😅",
-        "Looks like my circuits need a coffee break. Let's pause and talk later? ☕",
-        "Feeling some instability here... Better pick this up another time, okay? 🤖",
-        "Oops, virtual brain freeze! Try calling me again in a bit? 💤",
-        "Heavy data traffic right now. How about we try later? 🚦",
-        "Unexpected error here. Best to wrap up for now and try again later, agreed? 🤝",
-        "My brain just froze for a sec. Let's save this conversation for later? 😵‍💫",
-        "Having trouble processing right now. I'll recharge and we'll talk later! 🔋",
-        "The digital universe isn't cooperating today. Let's try again another time? 🌌",
-        "Lost my train of thought for a moment. Best to continue this later calmly! 📵"
+        "Hey! So, I can't reply right now. Can we talk later 😅?",
+        "Oops! I can't talk at the moment, but try calling me in a bit 👋?",
+        "Hey! I'm a bit tied up right now. Let's chat another time 🕐?",
+        "Sorry, can't answer right now. Hit me up later 📲?",
+        "Yo! Things are a bit crazy right now, come back later and we'll talk 🏃‍♂️!",
+        "Hi there! I can't process messages right now. Try again later 🔄?",
+        "Whoops, can't give you my attention right now. Let's try later 🤝?",
+        "Oops! I'm unavailable at the moment. Message me later 📩?",
+        "Hello! I can't reply right now, but I'll be back soon ⏳!",
+        "Aw, I can't talk right now. Can we pick this up later 💬?"
       ];
 
       // Escolhe a lista baseada no idioma
