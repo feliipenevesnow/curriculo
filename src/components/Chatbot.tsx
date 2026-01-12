@@ -179,16 +179,7 @@ ${query}`;
       // Escolhe uma mensagem aleatória
       let msg = messagesList[Math.floor(Math.random() * messagesList.length)];
 
-      // Erros específicos de segurança/quota também traduzidos
-      if (error instanceof Error && (error.message.includes('API key not valid') || error.message.includes('leaked'))) {
-        msg = lang === 'pt'
-          ? "🔒 Segurança: Minha chave de API expirou ou foi bloqueada. Preciso que o Felipe gere uma nova."
-          : "🔒 Security: My API key has expired or been blocked. Felipe needs to generate a new one.";
-      } else if (error instanceof Error && error.message.includes('quota')) {
-        msg = lang === 'pt'
-          ? "🛑 Calma lá! Muitas interações. Minha inteligência gratuita atingiu o limite. Tente daqui a pouco."
-          : "🛑 Hold on! Too many interactions. My free intelligence reached its limit. Try again in a bit.";
-      }
+
 
       setMessages(prev => [...prev, { sender: 'bot', text: msg }]);
 
