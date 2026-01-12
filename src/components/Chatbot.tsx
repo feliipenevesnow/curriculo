@@ -6,37 +6,45 @@ import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from '@google/ge
 import { systemPrompt } from '../data/systemPrompt';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+
 type Message = {
   sender: 'user' | 'bot';
   text: string;
 };
+
 type ChatbotProps = {
   isOpen: boolean;
   onClose: () => void;
   lang: 'pt' | 'en';
 };
+
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 console.log("API_KEY carregada:", API_KEY ? "✅ OK" : "❌ FALTA DEFINIR");
+
 const genAI = new GoogleGenerativeAI(API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+
 const generationConfig = {
   temperature: 0.9,
   topK: 1,
   topP: 1,
   maxOutputTokens: 2048,
 };
+
 const safetySettings = [
   { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
   { category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
   { category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
   { category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
 ];
+
 export function Chatbot({ isOpen, onClose, lang }: ChatbotProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [query, setQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
   useEffect(() => {
     if (isOpen) {
       const stored = localStorage.getItem('chatHistory');
@@ -46,6 +54,7 @@ export function Chatbot({ isOpen, onClose, lang }: ChatbotProps) {
       });
     }
   }, [isOpen]);
+
   useEffect(() => {
     if (isOpen && messages.length > 0) {
       localStorage.setItem('chatHistory', JSON.stringify(messages));
@@ -53,9 +62,11 @@ export function Chatbot({ isOpen, onClose, lang }: ChatbotProps) {
       localStorage.removeItem('chatHistory');
     }
   }, [messages, isOpen]);
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
+
   const handleClearChat = useCallback(() => {
     setMessages([]);
     localStorage.removeItem('chatHistory');
@@ -64,6 +75,7 @@ export function Chatbot({ isOpen, onClose, lang }: ChatbotProps) {
       textareaRef.current?.focus();
     });
   }, []);
+
   const prevLangRef = useRef(lang);
   useEffect(() => {
     if (prevLangRef.current && prevLangRef.current !== lang) {
@@ -76,23 +88,28 @@ export function Chatbot({ isOpen, onClose, lang }: ChatbotProps) {
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!query.trim() || isLoading) return;
+
     const userMessage: Message = { sender: 'user', text: query };
     const updatedMessages = [...messages, userMessage];
+
     setMessages(updatedMessages);
     setQuery('');
     setIsLoading(true);
+
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
     }
-    try {
 
+    try {
       const langInstruction = lang === 'pt'
         ? "INSTRUÇÃO IMPORTANTE: Responda a esta nova mensagem (e todas as futuras) estritamente em Português (Brasil)."
         : "IMPORTANT INSTRUCTION: You must reply to this new message (and all future messages) strictly in English.";
+
       const historyLabel = lang === 'pt' ? "Histórico da conversa:" : "Conversation history:";
       const newUserLabel = lang === 'pt' ? "Nova mensagem do usuário:" : "New user message:";
       const userLabel = lang === 'pt' ? "Usuário" : "User";
       const assistantLabel = lang === 'pt' ? "Assistente" : "Assistant";
+
       const fullPrompt = `${systemPrompt}\n
 ${langInstruction}\n\n
 ${historyLabel}\n${updatedMessages
@@ -100,25 +117,81 @@ ${historyLabel}\n${updatedMessages
           .join('\n')}
 ${newUserLabel}
 ${query}`;
+
+      console.group("🤖 Gemini Interaction Debug");
+      console.log("📝 Full Prompt sent to API:", fullPrompt);
+      console.log("💬 Current Messages State:", updatedMessages);
+      console.log("🔑 API Key Present:", !!API_KEY);
+      console.groupEnd();
+
       const result = await model.generateContent({
         contents: [{ role: 'user', parts: [{ text: fullPrompt }] }],
         generationConfig,
         safetySettings,
       });
+
       const responseText = result.response.text();
       const botMessage: Message = { sender: 'bot', text: responseText };
       setMessages(prev => [...prev, botMessage]);
+
     } catch (error) {
-      console.error("Erro Gemini:", error);
-      let msg = "⚠️ Ocorreu um erro ao processar sua mensagem.";
-      if (error instanceof Error && error.message.includes('API key not valid')) {
-        msg = "❌ Chave da API inválida. Verifique o arquivo .env.local.";
+      console.error("❌ Erro Gemini Detalhado:", error);
+      console.group("❌ Error Debug Info");
+      // @ts-ignore
+      if (error?.message) console.error("Message:", error.message);
+      // @ts-ignore
+      if (error?.stack) console.error("Stack:", error.stack);
+      // @ts-ignore
+      if (error?.response) console.error("Response data:", error.response);
+      console.groupEnd();
+
+      // Mensagens de erro em Português
+      const errorMessagesPt = [
+        "Eita, minha conexão oscilou aqui. Melhor a gente tentar conversar mais tarde, pode ser? 😅",
+        "Olha, parece que meus circuitos precisam de um café. Vamos dar um tempo e voltamos a falar depois? ☕",
+        "Tô sentindo uma instabilidade... Melhor retomar esse papo em outro momento, tá bom? 🤖",
+        "Ops, minha cabeça virtual deu um nó! Tenta me chamar daqui a pouco? 💤",
+        "Tráfego intenso de dados por aqui. Que tal tentarmos mais tarde? 🚦",
+        "Deu um erro inesperado. Pra não ficar chato, melhor encerrar por agora e tentar depois, combinado? 🤝",
+        "Meu cérebro travou rapidinho. Vamos deixar essa conversa pra mais tarde? 😵‍💫",
+        "Tô com dificuldade pra processar agora. Vou recarregar e voltamos a falar depois! 🔋",
+        "Hoje o universo digital não tá colaborando. Vamos tentar de novo numa outra hora? 🌌",
+        "Perdi o fio da meada por um instante. Melhor a gente continuar depois com mais calma! 📵"
+      ];
+
+      // Error messages in English
+      const errorMessagesEn = [
+        "Oops, my connection just flickered. Maybe we can try chatting later? 😅",
+        "Looks like my circuits need a coffee break. Let's pause and talk later? ☕",
+        "Feeling some instability here... Better pick this up another time, okay? 🤖",
+        "Oops, virtual brain freeze! Try calling me again in a bit? 💤",
+        "Heavy data traffic right now. How about we try later? 🚦",
+        "Unexpected error here. Best to wrap up for now and try again later, agreed? 🤝",
+        "My brain just froze for a sec. Let's save this conversation for later? 😵‍💫",
+        "Having trouble processing right now. I'll recharge and we'll talk later! 🔋",
+        "The digital universe isn't cooperating today. Let's try again another time? 🌌",
+        "Lost my train of thought for a moment. Best to continue this later calmly! 📵"
+      ];
+
+      // Escolhe a lista baseada no idioma
+      const messagesList = lang === 'pt' ? errorMessagesPt : errorMessagesEn;
+
+      // Escolhe uma mensagem aleatória
+      let msg = messagesList[Math.floor(Math.random() * messagesList.length)];
+
+      // Erros específicos de segurança/quota também traduzidos
+      if (error instanceof Error && (error.message.includes('API key not valid') || error.message.includes('leaked'))) {
+        msg = lang === 'pt'
+          ? "🔒 Segurança: Minha chave de API expirou ou foi bloqueada. Preciso que o Felipe gere uma nova."
+          : "🔒 Security: My API key has expired or been blocked. Felipe needs to generate a new one.";
       } else if (error instanceof Error && error.message.includes('quota')) {
-        msg = "⚠️ Limite de uso atingido. Tente novamente mais tarde.";
-      } else if (error instanceof Error && error.message.includes('404')) {
-        msg = "❌ Modelo não encontrado. Avise o Felipe para corrigir.";
+        msg = lang === 'pt'
+          ? "🛑 Calma lá! Muitas interações. Minha inteligência gratuita atingiu o limite. Tente daqui a pouco."
+          : "🛑 Hold on! Too many interactions. My free intelligence reached its limit. Try again in a bit.";
       }
+
       setMessages(prev => [...prev, { sender: 'bot', text: msg }]);
+
     } finally {
       setIsLoading(false);
       requestAnimationFrame(() => {
@@ -126,18 +199,22 @@ ${query}`;
       });
     }
   };
+
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setQuery(e.target.value);
     e.target.style.height = 'auto';
     e.target.style.height = `${e.target.scrollHeight}px`;
   };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       (e.target as HTMLTextAreaElement).form?.requestSubmit();
     }
   };
+
   if (!isOpen) return null;
+
   return (
     <div className="chatbot-window" data-aos="fade-up" data-aos-duration="300">
       {/* Cabeçalho */}
@@ -151,6 +228,27 @@ ${query}`;
           ×
         </button>
       </div>
+
+      {/* Aviso do Plano Gratuito */}
+      <div className="chatbot-warning" style={{
+        backgroundColor: 'rgba(255, 165, 0, 0.1)',
+        borderBottom: '1px solid rgba(255, 165, 0, 0.3)',
+        padding: '8px 12px',
+        fontSize: '0.75rem',
+        color: '#ffb74d',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        lineHeight: '1.4'
+      }}>
+        <span style={{ fontSize: '1.2rem' }}>⚠️</span>
+        <span>
+          {lang === 'pt'
+            ? "⚠️ Modo Gratuito: Sujeito a instabilidade e limites. Se parar, tente mais tarde!"
+            : "⚠️ Free Mode: Subject to instability and limits. If it stops, try again later!"}
+        </span>
+      </div>
+
       {/* Corpo */}
       <div className="chatbot-messages">
         {/* ⬇️ CORREÇÃO: Mensagem inicial dinâmica baseada em 'lang' */}
@@ -178,6 +276,7 @@ ${query}`;
         )}
         <div ref={messagesEndRef} />
       </div>
+
       {/* Entrada */}
       <form className="chatbot-input-form" onSubmit={handleSend}>
         <textarea
