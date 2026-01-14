@@ -31,6 +31,7 @@ function App() {
 
   const [lang, setLang] = useState<'pt' | 'en'>('pt');
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isCoursesExpanded, setIsCoursesExpanded] = useState(false);
   const T: TranslationData = translations[lang];
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -155,7 +156,7 @@ function App() {
         <div className="container-conteudo">
           <section className="glass-card" id="resumo" data-aos="fade-up">
             <h3 className="section-title">{T.summary.title}</h3>
-            <p>{T.summary.body}</p>
+            <p dangerouslySetInnerHTML={{ __html: T.summary.body }}></p>
           </section>
 
           <section className="glass-card" id="experiencia" data-aos="fade-up" data-aos-delay="100">
@@ -167,9 +168,44 @@ function App() {
                   <span><strong>{item.company}</strong> | {item.date}</span>
                 </div>
                 <ul>
-                  {item.description.map((desc, i) => (
-                    <li key={i}>{desc}</li>
-                  ))}
+                  {item.description.map((desc, i) => {
+                    const isTechLine = desc.indexOf('Tecnologias:') !== -1 || desc.indexOf('Technologies:') !== -1;
+
+                    if (isTechLine) {
+                      // Remove bullets from start if any (though we added them manually in text, 
+                      // we want to strip the "Tecnologias:" part cleanly)
+                      // Actually the line comes as "Technologies: A • B • C" (sometimes with bullet prefix from previous edits? Let's be safe)
+                      // The previous edit added manual bullets to ALL lines?
+                      // Let's check if the line STARTS with "Technologies" or "• Technologies"
+
+                      const cleanDesc = desc.replace(/^•\s*/, ''); // Remove leading bullet if present
+                      if (cleanDesc.startsWith('Tecnologias:') || cleanDesc.startsWith('Technologies:')) {
+                        const [label, techsString] = cleanDesc.split(/:(.+)/);
+                        if (techsString) {
+                          const techs = techsString.split('•').map(t => t.trim()).filter(Boolean);
+                          return (
+                            <li key={i} className="tech-tags-wrapper" style={{ listStyle: 'none', marginTop: '12px', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+                              <span className="tech-list-label" style={{ fontWeight: 'bold', marginRight: '5px', color: 'var(--accent-primary)' }}>{label}:</span>
+                              {techs.map((tech, tIndex) => (
+                                <span key={tIndex} className="tech-badge" style={{
+                                  background: 'rgba(6, 182, 212, 0.15)',
+                                  color: 'var(--accent-primary)',
+                                  padding: '4px 10px',
+                                  borderRadius: '12px',
+                                  fontSize: '0.85em',
+                                  border: '1px solid rgba(6, 182, 212, 0.3)'
+                                }}>
+                                  {tech}
+                                </span>
+                              ))}
+                            </li>
+                          );
+                        }
+                      }
+                    }
+
+                    return <li key={i}>{desc}</li>;
+                  })}
                 </ul>
               </article>
             ))}
@@ -238,10 +274,42 @@ function App() {
             <div className="coluna-cursos">
               <h3 className="section-title">{T.courses.title}</h3>
               <ul>
-                {T.courses.items.map((item, index) => (
-                  <li key={index} dangerouslySetInnerHTML={{ __html: item }} />
+                {T.courses.items.featured.map((item, index) => (
+                  <li key={`featured-${index}`} dangerouslySetInnerHTML={{ __html: item }} />
                 ))}
               </ul>
+
+              {isCoursesExpanded && (
+                <ul className="cursos-lista-extra" style={{ marginTop: '10px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '10px' }}>
+                  {T.courses.items.others.map((item, index) => (
+                    <li key={`others-${index}`} dangerouslySetInnerHTML={{ __html: item }} />
+                  ))}
+                </ul>
+              )}
+
+              <div style={{ textAlign: 'center', marginTop: '15px' }}>
+                <button
+                  onClick={() => setIsCoursesExpanded(!isCoursesExpanded)}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid var(--accent-primary)',
+                    color: 'var(--text-primary)',
+                    padding: '8px 20px',
+                    borderRadius: '20px',
+                    cursor: 'pointer',
+                    fontSize: '0.9rem',
+                    transition: 'all 0.3s ease',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                >
+                  {isCoursesExpanded
+                    ? (lang === 'pt' ? 'Ver menos' : 'Show less')
+                    : (lang === 'pt' ? 'Ver mais' : 'Show more')
+                  }
+                </button>
+              </div>
             </div>
           </section>
 
@@ -272,13 +340,13 @@ function App() {
         </p>
         <p className="tech-stack">
           {lang === 'pt'
-            ? 'Potencializado com uma '
-            : 'Powered by a '
+            ? 'Potencializado com '
+            : 'Powered by '
           }
           <strong>IA Generativa (Google Gemini)</strong>
           {lang === 'pt'
-            ? ' equipada com memória de agente.'
-            : ' equipped with agent memory.'
+            ? ' para responder perguntas sobre meu perfil e projetos.'
+            : ' to answer questions about my profile and projects.'
           }
         </p>
       </footer>
