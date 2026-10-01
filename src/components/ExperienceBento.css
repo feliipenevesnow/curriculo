@@ -1,0 +1,295 @@
+/* ==========================================================================
+   EXPERIENCE BENTO - EXECUTIVE CAREER MATRIX
+   ========================================================================== */
+
+.experience-bento-container {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 20px;
+  align-items: stretch;
+  position: relative;
+  z-index: 2;
+}
+
+/* Left Column: Company Cards */
+.experience-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.exp-selector-card {
+  position: relative;
+  background: rgba(15, 18, 26, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  padding: 16px 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+.exp-selector-card:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.exp-selector-card.active {
+  background: rgba(20, 25, 36, 0.85);
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.active-rail-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: #38bdf8;
+}
+
+.exp-selector-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.exp-company-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #94a3b8;
+  letter-spacing: 0.02em;
+}
+
+.badge-icon {
+  font-size: 0.72rem;
+  color: #64748b;
+}
+
+.exp-top-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.current-pulse-badge {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.mobile-chevron {
+  font-size: 0.72rem;
+  color: #64748b;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.mobile-chevron.rotated {
+  transform: rotate(180deg);
+  color: #38bdf8;
+}
+
+.exp-selector-role {
+  font-size: 0.94rem;
+  font-weight: 600;
+  color: #f1f5f9;
+  margin: 0 0 4px;
+  line-height: 1.35;
+}
+
+.exp-selector-date {
+  font-size: 0.78rem;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+}
+
+/* Right Column: Desktop Detail Inspector Panel */
+.experience-detail-panel {
+  display: flex;
+  flex-direction: column;
+  background: rgba(15, 18, 26, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 28px 32px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+}
+
+.detail-panel-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  padding-bottom: 18px;
+  margin-bottom: 22px;
+}
+
+.detail-company-sub {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.detail-date {
+  color: #64748b;
+}
+
+.detail-role-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+/* Bullets List */
+.detail-bullets-container {
+  flex: 1;
+  margin-bottom: 20px;
+}
+
+.detail-section-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #64748b;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0 0 12px;
+  display: flex;
+  align-items: center;
+}
+
+.detail-bullet-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.detail-bullet-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.88rem;
+  color: #cbd5e1;
+  line-height: 1.55;
+}
+
+.bullet-check-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  color: #38bdf8;
+  font-size: 0.65rem;
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+.bullet-text {
+  flex: 1;
+}
+
+/* Tech Stack Tags */
+.detail-tech-stack-container {
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  padding-top: 16px;
+}
+
+.detail-tech-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.tech-chip {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 4px 10px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.tech-chip:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   DESKTOP / MOBILE RESPONSIVE SWITCH
+   ========================================================================== */
+
+/* Desktop: hide inline details and chevron */
+@media (min-width: 901px) {
+  .mobile-inline-detail {
+    display: none !important;
+  }
+  .mobile-chevron {
+    display: none !important;
+  }
+  .experience-detail-panel {
+    display: flex !important;
+  }
+}
+
+/* Mobile: accordion layout where details expand directly inside the clicked card */
+@media (max-width: 900px) {
+  .experience-bento-container {
+    grid-template-columns: 1fr;
+  }
+
+  /* Hide the distant bottom panel on mobile */
+  .experience-detail-panel {
+    display: none !important;
+  }
+
+  .mobile-chevron {
+    display: inline-block;
+  }
+
+  .mobile-inline-detail {
+    display: block;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    animation: accordionOpen 0.22s ease-out forwards;
+  }
+
+  @keyframes accordionOpen {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .exp-selector-card.active {
+    border-color: rgba(56, 189, 248, 0.35);
+  }
+}

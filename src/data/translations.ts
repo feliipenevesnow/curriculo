@@ -77,7 +77,7 @@ export const translations: Translations = {
     btnViewMore: 'Ver Detalhes',
     header: {
       jobTitle: 'Desenvolvedor Full Stack • IA Generativa',
-      location: 'Presidente Epitácio, SP',
+      location: 'Presidente Prudente, SP',
     },
     summary: {
       title: 'Resumo Profissional',
@@ -86,6 +86,17 @@ export const translations: Translations = {
     experience: {
       title: 'Experiência Profissional',
       items: [
+        {
+          title: 'Desenvolvedor Full Stack & IA',
+          company: 'Freelance • Projetos Autônomos',
+          date: 'Jul 2025 – Presente',
+          description: [
+            '• Arquitetura e desenvolvimento de sistemas web sob medida e ERPs modulares com regras de negócio, modelagem de dados e dashboards analíticos.',
+            '• Integração de soluções com IA Generativa, agentes inteligentes, pipelines RAG e fluxos automatizados com LLMs para eficiência operacional.',
+            '• Desenvolvimento de landing pages de alta conversão, responsivas, com performance otimizada e foco em SEO e captura de leads.',
+            'Tecnologias: React • TypeScript • Python • FastAPI • PostgreSQL • IA Generativa • RAG • ERP • Landing Pages • Docker',
+          ],
+        },
         {
           title: 'Desenvolvedor de Aplicações com IA Generativa',
           company: 'OiKO.ai',
@@ -177,7 +188,7 @@ export const translations: Translations = {
       items: {
         featured: [
           '<strong>Scientific Computing with Python</strong> - freeCodeCamp (2024)',
-          '<strong>EF SET English Certificate 72/100 (C2)</strong> - EF Standard English Test (2025)',
+          '<strong>EF SET English Certificate 63/100 (C1)</strong> - EF Standard English Test (2025)',
           '<strong>Redes de Deep Learning</strong> - DIO (Ago 2023)',
           '<strong>Aprenda sobre S.O.L.I.D. com Java</strong> - DIO (Ago 2023)',
           '<strong>Administrando Banco de Dados</strong> - Fundação Bradesco (Jul 2023)',
@@ -459,7 +470,7 @@ export const translations: Translations = {
     languages: {
       title: 'Idiomas',
       items: [
-        '<strong>Inglês (C2 - Proficient)</strong>: Certificado EF SET (72/100).',
+        '<strong>Inglês (C1 - Intermediário)</strong>: Certificado EF SET (63/100).',
         '<strong>Espanhol (A1 - Básico)</strong>',
       ],
     },
@@ -472,7 +483,7 @@ export const translations: Translations = {
     btnViewMore: 'View Details',
     header: {
       jobTitle: 'Full Stack Developer • Generative AI',
-      location: 'Presidente Epitácio, SP, Brazil',
+      location: 'Presidente Prudente, SP, Brazil',
     },
     summary: {
       title: 'Professional Summary',
@@ -481,6 +492,17 @@ export const translations: Translations = {
     experience: {
       title: 'Professional Experience',
       items: [
+        {
+          title: 'Full Stack & AI Developer',
+          company: 'Freelance • Independent Projects',
+          date: 'Jul 2025 – Present',
+          description: [
+            '• Architecture and development of custom web systems and modular ERPs with business logic, database modeling, and management dashboards.',
+            '• Integration of Generative AI solutions, intelligent agents, RAG pipelines, and automated LLM workflows to maximize operational efficiency.',
+            '• Development of high-converting, responsive landing pages with optimized performance, technical SEO, and lead acquisition focus.',
+            'Technologies: React • TypeScript • Python • FastAPI • PostgreSQL • Generative AI • RAG • ERP • Landing Pages • Docker',
+          ],
+        },
         {
           title: 'Generative AI Applications Developer',
           company: 'OiKO.ai',
@@ -572,7 +594,7 @@ export const translations: Translations = {
       items: {
         featured: [
           '<strong>Scientific Computing with Python</strong> - freeCodeCamp (2024)',
-          '<strong>EF SET English Certificate 72/100 (C2)</strong> - EF Standard English Test (2025)',
+          '<strong>EF SET English Certificate 63/100 (C1)</strong> - EF Standard English Test (2025)',
           '<strong>Deep Learning Networks</strong> - DIO (Aug 2023)',
           '<strong>Learn about S.O.L.I.D. with Java</strong> - DIO (Aug 2023)',
           '<strong>Database Administration</strong> - Fundação Bradesco (Jul 2023)',
@@ -854,7 +876,7 @@ export const translations: Translations = {
     languages: {
       title: 'Languages',
       items: [
-        '<strong>English (C2 - Proficient)</strong>: EF SET Certificate (72/100).',
+        '<strong>English (C1 - Intermediate)</strong>: EF SET Certificate (63/100).',
         '<strong>Spanish (A1 - Basic)</strong>',
       ],
     },

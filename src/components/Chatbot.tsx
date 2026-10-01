@@ -1,290 +1,321 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { SiOpenai } from 'react-icons/si';
-import { FaTrash } from 'react-icons/fa';
-import { IoSend } from 'react-icons/io5';
-import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from '@google/generative-ai';
-import { systemPrompt } from '../data/systemPrompt';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import React, { useState, useRef, useEffect } from 'react';
+import {
+  FaRobot,
+  FaPaperPlane,
+  FaTrashAlt,
+  FaRegCommentDots,
+  FaBrain,
+  FaChevronDown,
+} from 'react-icons/fa';
+import { sendMessageToGemini, type ChatMessage } from '../services/gemini';
+import './ChatBot.css';
 
-type Message = {
-  sender: 'user' | 'bot';
-  text: string;
-};
-
-type ChatbotProps = {
-  isOpen: boolean;
-  onClose: () => void;
+interface ChatBotProps {
   lang: 'pt' | 'en';
-};
+}
 
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-console.log("API_KEY carregada:", API_KEY ? "✅ OK" : "❌ FALTA DEFINIR");
-
-const genAI = new GoogleGenerativeAI(API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-
-const generationConfig = {
-  temperature: 0.9,
-  topK: 1,
-  topP: 1,
-  maxOutputTokens: 2048,
-};
-
-const safetySettings = [
-  { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
-  { category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
-  { category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
-  { category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
-];
-
-export function Chatbot({ isOpen, onClose, lang }: ChatbotProps) {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [query, setQuery] = useState('');
+export const ChatBot: React.FC<ChatBotProps> = ({ lang }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
+  const getInitialMessage = (): ChatMessage => ({
+    id: 'msg-welcome',
+    sender: 'bot',
+    text:
+      lang === 'pt'
+        ? 'Olá! 👋 Sou o **Felipe AI**, assistente virtual exclusivo do portfólio de Felipe Neves.\n\nEstou aqui para tirar qualquer dúvida sobre a trajetória dele, habilidades técnicas em **Full Stack & IA Generativa**, projetos desenvolvidos e formas de contato.\n\nComo posso ajudar você hoje?'
+        : 'Hello! 👋 I am **Felipe AI**, the exclusive virtual assistant for Felipe Neves’s portfolio.\n\nI am here to answer any questions about his background, core technical skills in **Full Stack & Generative AI**, featured projects, and contact channels.\n\nHow can I help you today?',
+    timestamp: new Date(),
+  });
+
+  const [messages, setMessages] = useState<ChatMessage[]>([getInitialMessage()]);
+
+  // Atualiza mensagem inicial se idioma mudar e usuário ainda não tiver mandado mensagens
+  useEffect(() => {
+    if (messages.length === 1 && messages[0].id === 'msg-welcome') {
+      setMessages([getInitialMessage()]);
+    }
+  }, [lang]);
+
+  // Scroll automático para a última mensagem
   useEffect(() => {
     if (isOpen) {
-      const stored = localStorage.getItem('chatHistory');
-      if (stored) setMessages(JSON.parse(stored));
-      requestAnimationFrame(() => {
-        textareaRef.current?.focus();
-      });
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, isLoading, isOpen]);
+
+  // Foco no input ao abrir
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => inputRef.current?.focus(), 250);
     }
   }, [isOpen]);
 
-  useEffect(() => {
-    if (isOpen && messages.length > 0) {
-      localStorage.setItem('chatHistory', JSON.stringify(messages));
-    } else if (isOpen && messages.length === 0) {
-      localStorage.removeItem('chatHistory');
-    }
-  }, [messages, isOpen]);
+  const quickPrompts =
+    lang === 'pt'
+      ? [
+          'Qual é a sua stack principal?',
+          'Me conte sobre seus projetos com IA',
+          'Qual é a sua experiência profissional?',
+          'Como posso entrar em contato?',
+        ]
+      : [
+          'What is your core tech stack?',
+          'Tell me about your AI projects',
+          'What is your professional experience?',
+          'How can I get in touch?',
+        ];
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isLoading]);
+  const handleSendMessage = async (textToSend?: string) => {
+    const messageContent = (textToSend || inputText).trim();
+    if (!messageContent || isLoading) return;
 
-  const handleClearChat = useCallback(() => {
-    setMessages([]);
-    localStorage.removeItem('chatHistory');
-    setQuery('');
-    requestAnimationFrame(() => {
-      textareaRef.current?.focus();
-    });
-  }, []);
+    setHasInteracted(true);
+    setInputText('');
 
-  const prevLangRef = useRef(lang);
-  useEffect(() => {
-    if (prevLangRef.current && prevLangRef.current !== lang) {
-      console.log(`Idioma trocado de ${prevLangRef.current} para ${lang}. Limpando histórico.`);
-      handleClearChat();
-    }
-    prevLangRef.current = lang;
-  }, [lang, handleClearChat]);
+    const userMessage: ChatMessage = {
+      id: `user-${Date.now()}`,
+      sender: 'user',
+      text: messageContent,
+      timestamp: new Date(),
+    };
 
-  const handleSend = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!query.trim() || isLoading) return;
-
-    const userMessage: Message = { sender: 'user', text: query };
     const updatedMessages = [...messages, userMessage];
-
     setMessages(updatedMessages);
-    setQuery('');
     setIsLoading(true);
 
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-    }
-
     try {
-      const langInstruction = lang === 'pt'
-        ? "INSTRUÇÃO IMPORTANTE: Responda a esta nova mensagem (e todas as futuras) estritamente em Português (Brasil)."
-        : "IMPORTANT INSTRUCTION: You must reply to this new message (and all future messages) strictly in English.";
+      // Chama o serviço do Gemini com try/catch interno que já retorna uma das 10+ frases de fallback
+      const responseText = await sendMessageToGemini(messageContent, updatedMessages, lang);
 
-      const historyLabel = lang === 'pt' ? "Histórico da conversa:" : "Conversation history:";
-      const newUserLabel = lang === 'pt' ? "Nova mensagem do usuário:" : "New user message:";
-      const userLabel = lang === 'pt' ? "Usuário" : "User";
-      const assistantLabel = lang === 'pt' ? "Assistente" : "Assistant";
+      const botMessage: ChatMessage = {
+        id: `bot-${Date.now()}`,
+        sender: 'bot',
+        text: responseText,
+        timestamp: new Date(),
+      };
 
-      const fullPrompt = `${systemPrompt}\n
-${langInstruction}\n\n
-${historyLabel}\n${updatedMessages
-          .map(m => (m.sender === 'user' ? `${userLabel}: ${m.text}` : `${assistantLabel}: ${m.text}`))
-          .join('\n')}
-${newUserLabel}
-${query}`;
-
-      console.group("🤖 Gemini Interaction Debug");
-      console.log("📝 Full Prompt sent to API:", fullPrompt);
-      console.log("💬 Current Messages State:", updatedMessages);
-      console.log("🔑 API Key Present:", !!API_KEY);
-      console.groupEnd();
-
-      const result = await model.generateContent({
-        contents: [{ role: 'user', parts: [{ text: fullPrompt }] }],
-        generationConfig,
-        safetySettings,
-      });
-
-      const responseText = result.response.text();
-      const botMessage: Message = { sender: 'bot', text: responseText };
-      setMessages(prev => [...prev, botMessage]);
-
-    } catch (error) {
-      console.error("❌ Erro Gemini Detalhado:", error);
-      console.group("❌ Error Debug Info");
-      // @ts-ignore
-      if (error?.message) console.error("Message:", error.message);
-      // @ts-ignore
-      if (error?.stack) console.error("Stack:", error.stack);
-      // @ts-ignore
-      if (error?.response) console.error("Response data:", error.response);
-      console.groupEnd();
-
-      // Mensagens de erro em Português
-      const errorMessagesPt = [
-        "Oi! Então, agora não consigo responder. Podemos conversar mais tarde 😅?",
-        "Opa! No momento não consigo falar, mas tenta me chamar daqui a pouco 👋?",
-        "Ei! Tô meio enrolado agora. Vamos bater papo em outro horário 🕐?",
-        "Desculpa, agora não vai dar pra responder. Me chama mais tarde 📲?",
-        "Fala! Agora tá meio corrido, mas volta depois que a gente conversa 🏃‍♂️!",
-        "Oiê! Não tô conseguindo processar mensagens agora. Tenta de novo depois 🔄?",
-        "Eita, agora não consigo te dar atenção. Vamos tentar mais tarde 🤝?",
-        "Ops! Tô indisponível no momento. Me manda mensagem depois 📩?",
-        "Olá! Agora não consigo responder, mas em breve estarei de volta ⏳!",
-        "Poxa, agora não consigo falar. A gente pode retomar esse papo depois 💬?"
-      ];
-
-      // Error messages in English
-      const errorMessagesEn = [
-        "Hey! So, I can't reply right now. Can we talk later 😅?",
-        "Oops! I can't talk at the moment, but try calling me in a bit 👋?",
-        "Hey! I'm a bit tied up right now. Let's chat another time 🕐?",
-        "Sorry, can't answer right now. Hit me up later 📲?",
-        "Yo! Things are a bit crazy right now, come back later and we'll talk 🏃‍♂️!",
-        "Hi there! I can't process messages right now. Try again later 🔄?",
-        "Whoops, can't give you my attention right now. Let's try later 🤝?",
-        "Oops! I'm unavailable at the moment. Message me later 📩?",
-        "Hello! I can't reply right now, but I'll be back soon ⏳!",
-        "Aw, I can't talk right now. Can we pick this up later 💬?"
-      ];
-
-      // Escolhe a lista baseada no idioma
-      const messagesList = lang === 'pt' ? errorMessagesPt : errorMessagesEn;
-
-      // Escolhe uma mensagem aleatória
-      let msg = messagesList[Math.floor(Math.random() * messagesList.length)];
-
-
-
-      setMessages(prev => [...prev, { sender: 'bot', text: msg }]);
-
+      setMessages((prev) => [...prev, botMessage]);
+    } catch {
+      // Fallback de segurança adicional caso ocorra qualquer exceção na renderização
+      const fallbackMsg: ChatMessage = {
+        id: `bot-err-${Date.now()}`,
+        sender: 'bot',
+        text:
+          lang === 'pt'
+            ? 'Opa.. parece que temos um pequeno problema, vou sair um pouco já volto! 😅'
+            : "Oops.. looks like we have a small issue, I'll step out for a bit and be right back! 😅",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, fallbackMsg]);
     } finally {
       setIsLoading(false);
-      requestAnimationFrame(() => {
-        textareaRef.current?.focus();
-      });
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setQuery(e.target.value);
-    e.target.style.height = 'auto';
-    e.target.style.height = `${e.target.scrollHeight}px`;
+  const handleClearChat = () => {
+    setMessages([getInitialMessage()]);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      (e.target as HTMLTextAreaElement).form?.requestSubmit();
-    }
-  };
+  // Renderizador simples de markdown (negrito, links, quebra de linha)
+  const renderFormattedText = (content: string) => {
+    const lines = content.split('\n');
+    return lines.map((line, lineIdx) => {
+      // Converte links e negritos simples
+      let formatted = line.replace(
+        /\*\*(.*?)\*\*/g,
+        '<strong>$1</strong>'
+      );
+      formatted = formatted.replace(
+        /(https?:\/\/[^\s]+)/g,
+        '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
+      );
 
-  if (!isOpen) return null;
+      return (
+        <span key={lineIdx} className="chat-text-line">
+          <span dangerouslySetInnerHTML={{ __html: formatted }} />
+          {lineIdx < lines.length - 1 && <br />}
+        </span>
+      );
+    });
+  };
 
   return (
-    <div className="chatbot-window" data-aos="fade-up" data-aos-duration="300">
-      {/* Cabeçalho */}
-      <div className="chatbot-header">
-        <SiOpenai />
-        <span>Felipe Neves</span>
-        <button onClick={handleClearChat} className="chatbot-clear-btn" aria-label="Limpar">
-          <FaTrash />
-        </button>
-        <button onClick={onClose} className="chatbot-close-btn" aria-label="Fechar">
-          ×
-        </button>
-      </div>
+    <div className="chatbot-executive-wrapper">
+      {/* Botão Flutuante (FAB) */}
+      {!isOpen && (
+        <div className="chatbot-fab-container">
+          {!hasInteracted && (
+            <div className="chatbot-pill-preview" onClick={() => setIsOpen(true)}>
+              <span className="sparkle-icon">✨</span>
+              <span>{lang === 'pt' ? 'Pergunte à IA do Felipe' : 'Ask Felipe’s AI'}</span>
+            </div>
+          )}
+          <button
+            type="button"
+            className="chatbot-fab-btn"
+            onClick={() => setIsOpen(true)}
+            aria-label={lang === 'pt' ? 'Abrir Chatbot com IA' : 'Open AI Chatbot'}
+            title={lang === 'pt' ? 'Falar com Felipe AI' : 'Talk with Felipe AI'}
+          >
+            <div className="fab-icon-glow" />
+            <FaBrain className="fab-icon-main" />
+            <span className="fab-online-dot" />
+          </button>
+        </div>
+      )}
 
-      {/* Aviso do Plano Gratuito */}
-      <div className="chatbot-warning" style={{
-        backgroundColor: 'rgba(255, 165, 0, 0.1)',
-        borderBottom: '1px solid rgba(255, 165, 0, 0.3)',
-        padding: '8px 12px',
-        fontSize: '0.75rem',
-        color: '#ffb74d',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-        lineHeight: '1.4'
-      }}>
-        <span style={{ fontSize: '1.2rem' }}>⚠️</span>
-        <span>
-          {lang === 'pt'
-            ? "⚠️ Modo Gratuito: Sujeito a instabilidade e limites. Se parar, tente mais tarde!"
-            : "⚠️ Free Mode: Subject to instability and limits. If it stops, try again later!"}
-        </span>
-      </div>
+      {/* Janela do Chatbot */}
+      {isOpen && (
+        <div className="chatbot-window" role="dialog" aria-modal="true">
+          {/* Header */}
+          <div className="chatbot-header">
+            <div className="chatbot-header-identity">
+              <div className="chatbot-avatar-frame">
+                <FaRobot className="chatbot-avatar-icon" />
+                <span className="status-online-beacon" />
+              </div>
+              <div className="chatbot-header-titles">
+                <div className="chatbot-title-row">
+                  <h3 className="chatbot-title">Felipe AI</h3>
+                  <span className="chatbot-badge">Gemini 2.5</span>
+                </div>
+                <p className="chatbot-subtitle">
+                  {lang === 'pt'
+                    ? 'Especialista no meu currículo & projetos'
+                    : 'Specialist in my resume & projects'}
+                </p>
+              </div>
+            </div>
 
-      {/* Corpo */}
-      <div className="chatbot-messages">
-        {/* ⬇️ CORREÇÃO: Mensagem inicial dinâmica baseada em 'lang' */}
-        {messages.length === 0 && !isLoading && (
-          <div className="message message-bot">
-            {lang === 'pt'
-              ? "Olá! Tudo bem com você? Espero que sim 😄! Como posso te ajudar? Gostaria de saber o que sobre mim?"
-              : "Hello! How are you? I hope you're doing well 😄! How can I help you? What would you like to know about me?"
-            }
-          </div>
-        )}
-        {messages.map((msg, i) => (
-          <div key={i} className={`message ${msg.sender === 'bot' ? 'message-bot' : 'message-user'}`}>
-            <div className="markdown-message">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {msg.text}
-              </ReactMarkdown>
+            <div className="chatbot-header-actions">
+              <button
+                type="button"
+                className="chatbot-action-btn"
+                onClick={handleClearChat}
+                title={lang === 'pt' ? 'Limpar conversa' : 'Clear conversation'}
+              >
+                <FaTrashAlt />
+              </button>
+              <button
+                type="button"
+                className="chatbot-action-btn"
+                onClick={() => setIsOpen(false)}
+                title={lang === 'pt' ? 'Minimizar chat' : 'Minimize chat'}
+              >
+                <FaChevronDown />
+              </button>
             </div>
           </div>
-        ))}
-        {isLoading && (
-          <div className="message message-bot">
-            <span className="typing-indicator"></span>
-          </div>
-        )}
-        <div ref={messagesEndRef} />
-      </div>
 
-      {/* Entrada */}
-      <form className="chatbot-input-form" onSubmit={handleSend}>
-        <textarea
-          ref={textareaRef}
-          className="chatbot-textarea"
-          value={query}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-          rows={1}
-          placeholder={isLoading ? "Pensando..." : "Digite sua pergunta..."}
-          disabled={isLoading}
-          aria-label="Digite sua pergunta"
-        />
-        <button type="submit" disabled={isLoading || !query.trim()} aria-label="Enviar">
-          <IoSend />
-        </button>
-      </form>
+          {/* Histórico de Mensagens */}
+          <div className="chatbot-messages-container">
+            {messages.map((msg) => (
+              <div
+                key={msg.id}
+                className={`chat-message-row ${msg.sender === 'user' ? 'user-side' : 'bot-side'}`}
+              >
+                {msg.sender === 'bot' && (
+                  <div className="msg-bot-avatar">
+                    <FaRobot />
+                  </div>
+                )}
+                <div className={`chat-bubble ${msg.sender}`}>
+                  <div className="chat-bubble-content">
+                    {renderFormattedText(msg.text)}
+                  </div>
+                  <div className="chat-bubble-time">
+                    {msg.timestamp.toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {isLoading && (
+              <div className="chat-message-row bot-side">
+                <div className="msg-bot-avatar">
+                  <FaRobot />
+                </div>
+                <div className="chat-bubble bot typing">
+                  <span className="typing-dot" />
+                  <span className="typing-dot" />
+                  <span className="typing-dot" />
+                </div>
+              </div>
+            )}
+
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Sugestões Rápidas */}
+          {messages.length <= 3 && !isLoading && (
+            <div className="chatbot-suggestions-bar">
+              <span className="suggestions-label">
+                <FaRegCommentDots /> {lang === 'pt' ? 'Sugestões rápidas:' : 'Quick questions:'}
+              </span>
+              <div className="suggestions-chips-row">
+                {quickPrompts.map((prompt, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    className="suggestion-chip-btn"
+                    onClick={() => handleSendMessage(prompt)}
+                  >
+                    {prompt}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Formulário de Envio */}
+          <form
+            className="chatbot-input-area"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSendMessage();
+            }}
+          >
+            <input
+              ref={inputRef}
+              type="text"
+              className="chatbot-text-input"
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              placeholder={
+                lang === 'pt'
+                  ? 'Pergunte sobre minha experiência, projetos, stack...'
+                  : 'Ask about my experience, projects, stack...'
+              }
+              disabled={isLoading}
+            />
+            <button
+              type="submit"
+              className="chatbot-send-btn"
+              disabled={!inputText.trim() || isLoading}
+              aria-label={lang === 'pt' ? 'Enviar mensagem' : 'Send message'}
+            >
+              <FaPaperPlane />
+            </button>
+          </form>
+
+          {/* Nota de rodapé / Scope notice */}
+          <div className="chatbot-footer-notice">
+            <span>
+              {lang === 'pt'
+                ? '🔒 Assistente focado estritamente no perfil profissional de Felipe Neves.'
+                : '🔒 Assistant strictly scoped to Felipe Neves’s professional profile.'}
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
-}
+};
