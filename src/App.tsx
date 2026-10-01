@@ -206,7 +206,7 @@ function App() {
                     </div>
                     <div className="id-meta-item">
                       <span className="meta-key">{lang === 'pt' ? 'CONTRATO' : 'HIRING'}</span>
-                      <span className="meta-val highlight-green">{lang === 'pt' ? 'PJ / Remoto / Presencial' : 'Contract / Full-time'}</span>
+                      <span className="meta-val highlight-green">{lang === 'pt' ? 'CLT / PJ / Remoto / Presencial' : 'CLT / Contract / Full-time'}</span>
                     </div>
                   </div>
                 </div>

@@ -66,6 +66,7 @@ const SYSTEM_INSTRUCTION_PT = `Você é o "Felipe AI", assistente virtual inteli
   • LinkedIn: https://www.linkedin.com/in/feliipenevesnow/
   • GitHub: https://github.com/feliipenevesnow
   • Portfólio Web: https://curriculo-pi-opal.vercel.app/
+- Contratação e Disponibilidade: CLT, PJ, Remoto, Híbrido ou Presencial.
 - Resumo Profissional:
   Engenheiro de Software com foco no desenvolvimento de sistemas corporativos escaláveis em Python (FastAPI) e React (TypeScript). Experiência sólida em arquiteturas de IA Generativa com RAG (LangGraph/LangChain), modelos de linguagem (OpenAI, Gemini), modelagem relacional de alta performance (PostgreSQL) e infraestrutura em nuvem (Docker / Azure). Também possui vivência com Node.js (NestJS), C# (.NET), PHP (Laravel) e Java (Spring Boot).
 
