@@ -168,7 +168,7 @@ export const translations: Translations = {
         {
           degree: 'Bacharelado em Ciência da Computação',
           institution: 'Instituto Federal de São Paulo',
-          date: 'Conclusão: 07/2025',
+          date: 'Concluído em 07/2025',
           tccTitle: 'TCC - Protótipo de um VANT modular de baixo custo no contexto IoT',
           tccDescription: 'Desenvolvi um protótipo funcional de VANT modular integrado à IoT. Implementei controle remoto via internet com ESP32 integrado ao Adafruit IO e estabilização com sensores inerciais (MPU6050) usando Arduino.',
           tccImage: 'vant',
@@ -176,7 +176,7 @@ export const translations: Translations = {
         {
           degree: 'Técnico em Informática',
           institution: 'Instituto Federal de São Paulo',
-          date: 'Conclusão: 12/2019',
+          date: 'Concluído em 12/2019',
           tccTitle: 'TCC Integrado - ExpresSale: sistema de gerenciamento de vendas',
           tccDescription: 'Desenvolvimento de software desktop para gestão de vendas e estoque. Realizei a modelagem de banco de dados completa e implementação de regras de negócio para organização e controle de vendas/estoque.',
           tccImage: 'expressale',
@@ -574,7 +574,7 @@ export const translations: Translations = {
         {
           degree: 'B.Sc. in Computer Science',
           institution: 'Federal Institute of São Paulo',
-          date: 'Completion: 07/2025',
+          date: 'Completed: 07/2025',
           tccTitle: 'Capstone - Low-cost Modular UAV Prototype in IoT Context',
           tccDescription: 'Developed a functional low-cost modular UAV prototype integrated to IoT. Implemented remote control via internet with ESP32 integrated to Adafruit IO and stabilization with inertial sensors (MPU6050) using Arduino.',
           tccImage: 'vant',
@@ -582,7 +582,7 @@ export const translations: Translations = {
         {
           degree: 'Technical Degree in Informatics',
           institution: 'Federal Institute of São Paulo',
-          date: 'Completion: 12/2019',
+          date: 'Completed: 12/2019',
           tccTitle: 'Integrated Capstone - ExpresSale: Sales Management System',
           tccDescription: 'Developed desktop software for sales and inventory management. Performed complete database modeling and implemented business rules for sales/inventory organization and control.',
           tccImage: 'expressale',
